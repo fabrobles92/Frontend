@@ -1,0 +1,41 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Unit tests
+        run: npm run test
+
+      - name: Annotate PR with test results
+        if: ${{ failure() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ❌ E2E Tests Failed
+
+            Run details:
+            ${{ steps.e2e-tests.outputs.result }}
+          
+      - name: Update PR status
+        if: ${{ success() }}
+        run: echo "✅ E2E Tests Passed"
