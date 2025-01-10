@@ -1,4 +1,4 @@
-name: E2E Tests
+name: Unit Tests
 
 on:
   pull_request:
@@ -23,8 +23,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Run Unit tests
+        run: npm run test
 
       - name: Annotate PR with test results
         if: ${{ failure() }}
